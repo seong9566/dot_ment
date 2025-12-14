@@ -1,0 +1,86 @@
+---
+alwaysApply: true
+---
+# Architecture Principles
+
+## MVVM + Clean Architecture
+
+### View (StatelessWidget only)
+- UI 렌더링만 담당
+- BuildContext를 ViewModel에 전달하지 않음
+- 모든 로직은 ViewModel에 위임
+- `ref.watch()` 또는 `Consumer`로 상태 구독
+
+### ViewModel (Riverpod AsyncNotifier)
+- UI 상태를 `AsyncValue<State>`로 관리
+- 모든 비즈니스 로직은 Repository 호출을 통해 처리
+- BuildContext 접근 금지
+- 순수 함수로 작성 (side-effect 없음)
+  
+```dart
+@riverpod
+class TrainerDashboard extends _$TrainerDashboard {
+  @override
+  FutureOr<DashboardState> build() async {
+    return _fetchData();
+  }
+  
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _fetchData());
+  }
+  
+  Future<DashboardState> _fetchData() async {
+    final result = await ref.read(dashboardRepositoryProvider).getDashboard();
+    return result.fold(
+      (failure) => throw failure,
+      (data) => data,
+    );
+  }
+}
+```
+
+### Repository (추상화 + 구현 분리)
+- Domain layer: abstract class로 인터페이스 정의
+- Data layer: 구현체 (Dio 통신, 로컬 저장소 등)
+- 모든 메서드는 `Result<T>` 또는 `Either<Failure, T>` 반환
+- DioException을 Failure로 변환하는 책임
+
+### Data Layer
+- Dio를 통한 네트워크 통신
+- Freezed로 JSON 파싱
+- 예외를 Failure로 변환
+
+## Strict Separation of Concerns
+- View는 Repository에 직접 접근 금지
+- View → ViewModel → Repository → Data Source 흐름 준수
+- 각 레이어는 하위 레이어의 구현을 알지 못함 (의존성 역전)
+
+## Dependency Injection
+
+### Provider를 통한 의존성 주입
+```dart
+// core/network/dio_provider.dart
+@Riverpod(keepAlive: true)
+Dio dio(DioRef ref) {
+  final dio = Dio(BaseOptions(
+    baseUrl: Env.apiUrl,
+    connectTimeout: const Duration(seconds: 30),
+  ));
+  dio.interceptors.add(AuthInterceptor(ref));
+  return dio;
+}
+
+// features/trainer/data/repositories/trainer_repository_impl.dart
+@riverpod
+TrainerRepository trainerRepository(TrainerRepositoryRef ref) {
+  return TrainerRepositoryImpl(dio: ref.watch(dioProvider));
+}
+
+// 테스트 시 overrideWith로 mock 주입
+final container = ProviderContainer(
+  overrides: [
+    dioProvider.overrideWithValue(mockDio),
+  ],
+);
+```

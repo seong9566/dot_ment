@@ -1,0 +1,50 @@
+---
+alwaysApply: true
+---
+# Localization (i18n)
+
+## ARB 파일 구조
+```json
+// l10n/intl_en.arb
+{
+  "@@locale": "en",
+  "appTitle": "Fitness App",
+  "loginButton": "Login",
+  "welcomeMessage": "Welcome, {name}!",
+  "@welcomeMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
+}
+
+// l10n/intl_ko.arb
+{
+  "@@locale": "ko",
+  "appTitle": "피트니스 앱",
+  "loginButton": "로그인",
+  "welcomeMessage": "{name}님, 환영합니다!"
+}
+```
+
+## 사용 패턴
+```dart
+// ✅ GOOD
+Text(AppLocalizations.of(context)!.loginButton)
+
+// ❌ BAD: 하드코딩
+Text('Login')
+```
+
+## 규칙
+- 모든 사용자 대면 텍스트는 ARB 파일에 정의
+- English (en)와 Korean (ko) 완전 지원
+- Placeholder는 `{variable}` 형식으로 정의
+- `flutter gen-l10n` 실행 후 `AppLocalizations` 사용
+
+## Localization Command
+```bash
+flutter gen-l10n
+```

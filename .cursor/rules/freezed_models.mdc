@@ -1,0 +1,50 @@
+---
+alwaysApply: true
+---
+# Freezed Models
+
+## 모든 Model은 Freezed 사용
+```dart
+@freezed
+class Trainer with _$Trainer {
+  const factory Trainer({
+    required String id,
+    required String name,
+    required String email,
+    @Default([]) List<String> specialties,
+  }) = _Trainer;
+  
+  factory Trainer.fromJson(Map<String, dynamic> json) => _$TrainerFromJson(json);
+}
+
+// Union types로 상태 표현
+@freezed
+class DashboardState with _$DashboardState {
+  const factory DashboardState.initial() = _Initial;
+  const factory DashboardState.loading() = _Loading;
+  const factory DashboardState.loaded(DashboardData data) = _Loaded;
+  const factory DashboardState.error(String message) = _Error;
+}
+```
+
+## Freezed 규칙
+- 모든 Model은 `@freezed`로 선언하여 immutable 보장
+- `copyWith`, `==`, `hashCode`는 자동 생성됨
+- Union types는 `sealed class` 패턴으로 활용
+- JSON 직렬화는 `fromJson`, `toJson` 자동 생성
+- `*.freezed.dart`와 `*.g.dart`는 **절대 .gitignore에 추가하지 않음**
+
+## Code Generation Commands
+
+### Build Runner
+```bash
+# 한 번만 생성
+flutter pub run build_runner build --delete-conflicting-outputs
+
+# Watch 모드 (개발 중 권장)
+flutter pub run build_runner watch --delete-conflicting-outputs
+
+# Clean 후 재생성
+flutter pub run build_runner clean
+flutter pub run build_runner build --delete-conflicting-outputs
+```

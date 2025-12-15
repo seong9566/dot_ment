@@ -1,45 +1,122 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
+# Flutter/Dart
+.flutter-plugins
 .flutter-plugins-dependencies
-.pub-cache/
+.packages
+.dart_tool/
 .pub/
-/build/
-/coverage/
+build/
+*.freezed.dart
+*.g.dart
+# fvm
+fvm/
 
-# Symbolication related
-app.*.symbols
+# pubspec.lock은 패키지가 아닌 앱 프로젝트에서는 일반적으로 커밋하지만 요청에 따라 제외
+pubspec.lock
 
-# Obfuscation related
-app.*.map.json
+# 안드로이드 관련
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.*
+# 키스토어 및 관련 파일
+**/android/app/keystore/
+android/app/keystore/
+**/android/key.properties
+*.jks
+*.keystore
+# Firebase Admin SDK (민감 정보)
+*-firebase-adminsdk-*.json
+# 빌드 산출물
+*.apk
+*.aab
+*.ap_
+**/android/app/release/
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# iOS 관련
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/**/DerivedData/
+**/ios/**/Icon?
+**/ios/**/Pods/
+**/ios/**/profile
+**/ios/**/.symlinks/
+**/ios/**/xcuserdata
+**/ios/.generated/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+# 빌드 산출물 및 서명 파일
+*.ipa
+*.dSYM.zip
+*.dSYM
+**/ios/fastlane/certs/*.p8
+**/ios/fastlane/certs/*.p12
+**/ios/fastlane/certs/*.mobileprovision
+
+# Fastlane 관련
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
+**/fastlane/.tmp
+**/fastlane/README.md
+# Fastlane 환경변수 파일 (.env 기본파일은 커밋, 로컬/비밀 환경변수는 제외)
+**/.env.local
+**/.env.*.local
+**/ios/fastlane/.env
+**/android/fastlane/.env
+
+# 운영체제 및 IDE 관련
+.DS_Store
+.vscode/
+.idea/
+*.iml
+*.log
+.history
+.project
+.classpath
+.settings/
+
+# 기타 임시파일 및 백업
+*.swp
+*.bak
+*.tmp
+*~
+._.DS_Store
+._*
+Thumbs.db
+coverage/lcov.info
+
+## Gemini, Claude AI Rule
+*.GEMINI.md
+*.mcp_config.json
+*.AGENTS.md
+*.windsurf/
+.windsurf/
+GEMINI.md
+*.pubspec.yaml.backup
+*.AGENTS.md
+AGENTS.md
+
+# Taskmaster
+.taskmaster/
+
+# Environment variables
+.env

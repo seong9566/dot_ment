@@ -1,0 +1,8 @@
+{
+  "@@locale": "en",
+  "appTitle": "Dot Ment",
+  "@appTitle": {
+    "description": "Application title"
+  }
+}
+

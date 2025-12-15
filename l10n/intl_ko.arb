@@ -1,0 +1,8 @@
+{
+  "@@locale": "ko",
+  "appTitle": "닷멘트",
+  "@appTitle": {
+    "description": "앱 제목"
+  }
+}
+

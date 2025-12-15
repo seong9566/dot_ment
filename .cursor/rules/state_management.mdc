@@ -7,14 +7,14 @@ alwaysApply: true
 ```dart
 // ✅ GOOD: Code generation 사용
 @riverpod
-FutureOr<List<Trainer>> trainerList(TrainerListRef ref) async {
+FutureOr<List<Trainer>> trainerList(Ref ref) async {
   final repo = ref.watch(trainerRepositoryProvider);
   return repo.getTrainers();
 }
 
 // ✅ GOOD: KeepAlive가 필요한 경우
 @Riverpod(keepAlive: true)
-Dio dio(DioRef ref) {
+Dio dio(Ref ref) {
   final dio = Dio(BaseOptions(baseUrl: Env.apiUrl));
   dio.interceptors.add(AuthInterceptor(ref));
   return dio;

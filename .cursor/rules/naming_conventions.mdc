@@ -23,7 +23,7 @@ alwaysApply: true
 ```dart
 // ✅ GOOD: 명확한 네이밍
 @riverpod
-FutureOr<List<Trainer>> trainerList(TrainerListRef ref) async { ... }
+FutureOr<List<Trainer>> trainerList(Ref ref) async { ... }
 
 @riverpod
 class TrainerDashboard extends _$TrainerDashboard { ... }

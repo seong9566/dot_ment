@@ -7,7 +7,7 @@ alwaysApply: true
 ```dart
 // core/router/app_router.dart
 @riverpod
-GoRouter goRouter(GoRouterRef ref) {
+GoRouter goRouter(Ref ref) {
   final authState = ref.watch(authStateProvider);
   
   return GoRouter(

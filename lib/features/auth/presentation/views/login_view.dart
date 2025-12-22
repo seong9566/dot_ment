@@ -6,10 +6,9 @@ import 'package:dot_ment/core/theme/app_text_styles.dart';
 import 'package:dot_ment/core/theme/app_spacing.dart';
 import 'package:dot_ment/core/router/router_path.dart';
 import 'package:dot_ment/features/auth/presentation/viewmodels/login_viewmodel.dart';
-import 'package:dot_ment/features/auth/presentation/widgets/login_feature_list.dart';
-import 'package:dot_ment/features/auth/presentation/widgets/login_button.dart';
-import 'package:dot_ment/features/auth/presentation/widgets/remember_me_checkbox.dart';
-import 'package:dot_ment/features/auth/presentation/widgets/terms_text.dart';
+import 'package:dot_ment/features/auth/presentation/widgets/email_input_field.dart';
+import 'package:dot_ment/features/auth/presentation/widgets/terms_checkbox.dart';
+import 'package:dot_ment/features/auth/presentation/widgets/send_code_button.dart';
 
 /// 로그인 화면
 class LoginView extends ConsumerWidget {
@@ -22,76 +21,83 @@ class LoginView extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: AppSpacing.xxl),
+                      _buildHeader(),
+                      const SizedBox(height: AppSpacing.xxl),
+                      EmailInputField(
+                        value: state.email,
+                        onChanged: (email) => viewModel.updateEmail(email),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      TermsCheckbox(
+                        value: state.agreeToTerms,
+                        onChanged: () => viewModel.toggleAgreeToTerms(),
+                      ),
+                      SizedBox(height: AppSpacing.md),
+                      SendCodeButton(
+                        isLoading: state.isLoading,
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          await viewModel.sendCode();
+                          if (state.email.isNotEmpty && context.mounted) {
+                            context.push(
+                              '${RouterPath.emailVerification}?email=${Uri.encodeComponent(state.email)}',
+                            );
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).viewInsets.bottom > 0
+                            ? MediaQuery.of(context).viewInsets.bottom +
+                                  AppSpacing.md
+                            : AppSpacing.xl,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
           },
-          behavior: HitTestBehavior.opaque,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: AppSpacing.xxl),
-              _buildBrandHeader(),
-              const SizedBox(height: AppSpacing.md),
-              _buildTagline(),
-              const Spacer(flex: 1),
-              const LoginFeatureList(),
-              const SizedBox(height: AppSpacing.xl),
-              LoginButton(
-                text: 'Join',
-                isPrimary: true,
-                isLoading: state.isLoading,
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  context.push(RouterPath.emailInput);
-                },
-              ),
-              const SizedBox(height: AppSpacing.md),
-              LoginButton(
-                text: 'Login',
-                isPrimary: false,
-                isLoading: state.isLoading,
-                onPressed: () => viewModel.login(),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              RememberMeCheckbox(
-                value: state.rememberMe,
-                onChanged: () => viewModel.toggleRememberMe(),
-              ),
-              const Spacer(flex: 1),
-              const TermsText(),
-              const SizedBox(height: AppSpacing.xl),
-            ],
-            ),
-          ),
         ),
       ),
     );
   }
 
-  Widget _buildBrandHeader() {
-    return Text(
-      'DOTMENT',
-      style: AppTextStyles.heading1.copyWith(
-        color: AppColors.primary,
-        fontWeight: FontWeight.w900,
-        letterSpacing: 2,
-      ),
-      textAlign: TextAlign.center,
-    );
-  }
-
-  Widget _buildTagline() {
-    return Text(
-      'Check-in for your Channel',
-      style: AppTextStyles.heading2.copyWith(
-        color: AppColors.textSecondary,
-      ),
-      textAlign: TextAlign.center,
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Email',
+          style: AppTextStyles.heading1.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          'Enter your email',
+          style: AppTextStyles.bodyLarge.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
     );
   }
 }
-

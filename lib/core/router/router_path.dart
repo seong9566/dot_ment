@@ -3,9 +3,9 @@ class RouterPath {
   RouterPath._();
 
   static const splash = '/splash';
+  static const auth = '/auth';
   static const login = '/login';
-  static const emailInput = '/email-input';
+  static const join = '/join';
   static const emailVerification = '/email-verification';
   static const passwordSetting = '/password-setting';
 }
-

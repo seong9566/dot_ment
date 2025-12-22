@@ -5,33 +5,30 @@ import 'package:dot_ment/core/theme/app_colors.dart';
 import 'package:dot_ment/core/theme/app_text_styles.dart';
 import 'package:dot_ment/core/theme/app_spacing.dart';
 import 'package:dot_ment/core/router/router_path.dart';
-import 'package:dot_ment/features/auth/presentation/viewmodels/email_input_viewmodel.dart';
+import 'package:dot_ment/features/auth/presentation/viewmodels/join_viewmodel.dart';
 import 'package:dot_ment/features/auth/presentation/widgets/email_input_field.dart';
 import 'package:dot_ment/features/auth/presentation/widgets/terms_checkbox.dart';
 import 'package:dot_ment/features/auth/presentation/widgets/send_code_button.dart';
 
-/// 이메일 입력 화면
-class EmailInputView extends ConsumerWidget {
-  const EmailInputView({super.key});
+/// 회원가입 화면
+class JoinView extends ConsumerWidget {
+  const JoinView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(emailInputViewModelProvider.notifier);
-    final state = ref.watch(emailInputViewModelProvider);
-
+    final viewModel = ref.watch(joinViewModelProvider.notifier);
+    final state = ref.watch(joinViewModelProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
-      body: SafeArea( 
+      body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -52,10 +49,7 @@ class EmailInputView extends ConsumerWidget {
                         value: state.agreeToTerms,
                         onChanged: () => viewModel.toggleAgreeToTerms(),
                       ),
-                      SizedBox(
-                        height: 
-                            AppSpacing.md,
-                      ),
+                      const SizedBox(height: AppSpacing.md),
                       SendCodeButton(
                         isLoading: state.isLoading,
                         onPressed: () async {
@@ -70,7 +64,8 @@ class EmailInputView extends ConsumerWidget {
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).viewInsets.bottom > 0
-                            ? MediaQuery.of(context).viewInsets.bottom + AppSpacing.md
+                            ? MediaQuery.of(context).viewInsets.bottom +
+                                  AppSpacing.md
                             : AppSpacing.xl,
                       ),
                     ],
@@ -89,7 +84,7 @@ class EmailInputView extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Email',
+          'Join',
           style: AppTextStyles.heading1.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w900,
@@ -97,7 +92,7 @@ class EmailInputView extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          'Enter your email',
+          'Create your account',
           style: AppTextStyles.bodyLarge.copyWith(
             color: AppColors.textSecondary,
           ),
@@ -106,4 +101,3 @@ class EmailInputView extends ConsumerWidget {
     );
   }
 }
-

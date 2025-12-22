@@ -61,6 +61,32 @@ flutter:
   # https://flutter.dev/to/asset-from-package
 
   fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/font/Inter/Inter_18pt-Regular.ttf
+          weight: 400
+        - asset: assets/font/Inter/Inter_18pt-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/font/Inter/Inter_18pt-Medium.ttf
+          weight: 500
+        - asset: assets/font/Inter/Inter_18pt-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/font/Inter/Inter_18pt-SemiBold.ttf
+          weight: 600
+        - asset: assets/font/Inter/Inter_18pt-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/font/Inter/Inter_18pt-Bold.ttf
+          weight: 700
+        - asset: assets/font/Inter/Inter_18pt-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/font/Inter/Inter_28pt-Regular.ttf
+          weight: 400
+        - asset: assets/font/Inter/Inter_28pt-Bold.ttf
+          weight: 700
     - family: AlegreyaSans
       fonts:
         - asset: assets/font/AlegreyaSans-Thin.ttf

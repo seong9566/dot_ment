@@ -4,11 +4,7 @@ import 'package:dot_ment/core/router/app_router.dart';
 import 'package:dot_ment/core/theme/app_colors.dart';
 
 void main() {
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -27,7 +23,7 @@ class MyApp extends ConsumerWidget {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
-        fontFamily: 'AlegreyaSans',
+        fontFamily: 'Inter',
       ),
       routerConfig: router,
     );

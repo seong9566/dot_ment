@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'email_input_viewmodel.g.dart';
+part 'join_viewmodel.g.dart';
 
-/// 이메일 입력 화면 상태
-class EmailInputState {
-  const EmailInputState({
+/// 회원가입 화면 상태
+class JoinState {
+  const JoinState({
     this.email = '',
     this.agreeToTerms = false,
     this.isLoading = false,
@@ -14,12 +14,8 @@ class EmailInputState {
   final bool agreeToTerms;
   final bool isLoading;
 
-  EmailInputState copyWith({
-    String? email,
-    bool? agreeToTerms,
-    bool? isLoading,
-  }) {
-    return EmailInputState(
+  JoinState copyWith({String? email, bool? agreeToTerms, bool? isLoading}) {
+    return JoinState(
       email: email ?? this.email,
       agreeToTerms: agreeToTerms ?? this.agreeToTerms,
       isLoading: isLoading ?? this.isLoading,
@@ -27,12 +23,12 @@ class EmailInputState {
   }
 }
 
-/// 이메일 입력 ViewModel
+/// 회원가입 ViewModel
 @riverpod
-class EmailInputViewModel extends _$EmailInputViewModel {
+class JoinViewModel extends _$JoinViewModel {
   @override
-  EmailInputState build() {
-    return const EmailInputState();
+  JoinState build() {
+    return const JoinState();
   }
 
   void updateEmail(String email) {
@@ -55,4 +51,3 @@ class EmailInputViewModel extends _$EmailInputViewModel {
     state = state.copyWith(isLoading: false);
   }
 }
-

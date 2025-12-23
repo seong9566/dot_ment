@@ -49,15 +49,22 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: RouterPath.passwordSetting,
         name: 'password_setting',
-        builder: (context, state) => const PasswordSettingView(),
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'];
+          return PasswordSettingView(email: email);
+        },
       ),
       GoRoute(
         path: RouterPath.passwordCheck,
         name: 'password_check',
         builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
           final originalPassword =
               state.uri.queryParameters['originalPassword'] ?? '';
-          return PasswordCheckView(originalPassword: originalPassword);
+          return PasswordCheckView(
+            email: email,
+            originalPassword: originalPassword,
+          );
         },
       ),
     ],

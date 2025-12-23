@@ -14,7 +14,9 @@ import 'package:dot_ment/features/auth/presentation/widgets/password_requirement
 
 /// 비밀번호 설정 화면
 class PasswordSettingView extends ConsumerWidget {
-  const PasswordSettingView({super.key});
+  const PasswordSettingView({super.key, this.email});
+
+  final String? email;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -152,7 +154,7 @@ class PasswordSettingView extends ConsumerWidget {
             ? () {
                 FocusScope.of(context).unfocus();
                 context.push(
-                  '${RouterPath.passwordCheck}?originalPassword=${Uri.encodeComponent(originalPassword)}',
+                  '${RouterPath.passwordCheck}?email=${Uri.encodeComponent(email ?? '')}&originalPassword=${Uri.encodeComponent(originalPassword)}',
                 );
               }
             : null,

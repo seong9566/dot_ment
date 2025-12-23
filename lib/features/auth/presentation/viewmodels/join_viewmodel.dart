@@ -1,24 +1,22 @@
+import 'package:dot_ment/core/utils/error_handler.dart';
+import 'package:dot_ment/features/auth/presentation/providers/auth_providers_di.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'join_viewmodel.g.dart';
 
 /// 회원가입 화면 상태
 class JoinState {
-  const JoinState({
-    this.email = '',
-    this.agreeToTerms = false,
-    this.isLoading = false,
-  });
+  const JoinState({this.email = '', this.isLoading = false, this.errorMessage});
 
   final String email;
-  final bool agreeToTerms;
   final bool isLoading;
+  final String? errorMessage;
 
-  JoinState copyWith({String? email, bool? agreeToTerms, bool? isLoading}) {
+  JoinState copyWith({String? email, bool? isLoading, String? errorMessage}) {
     return JoinState(
       email: email ?? this.email,
-      agreeToTerms: agreeToTerms ?? this.agreeToTerms,
       isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
@@ -32,22 +30,22 @@ class JoinViewModel extends _$JoinViewModel {
   }
 
   void updateEmail(String email) {
-    state = state.copyWith(email: email);
+    state = state.copyWith(email: email, errorMessage: null);
   }
 
-  void toggleAgreeToTerms() {
-    state = state.copyWith(agreeToTerms: !state.agreeToTerms);
-  }
+  /// 인증 코드 전송 API 호출
+  Future<bool> sendCode() async {
+    try {
+      state = state.copyWith(isLoading: true, errorMessage: null);
 
-  Future<void> sendCode() async {
-    if (!state.agreeToTerms) {
-      // TODO: 에러 메시지 표시
-      return;
+      final usecase = ref.read(sendVerificationCodeUsecaseProvider);
+      final success = await usecase.call(state.email);
+
+      state = state.copyWith(isLoading: false);
+      return success;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: handleError(e));
+      return false;
     }
-
-    state = state.copyWith(isLoading: true);
-    // TODO: 실제 인증 코드 전송 로직 구현
-    await Future.delayed(const Duration(seconds: 1));
-    state = state.copyWith(isLoading: false);
   }
 }

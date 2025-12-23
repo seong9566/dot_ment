@@ -63,10 +63,19 @@ class EmailInputView extends ConsumerWidget {
                       SendCodeButton(
                         isLoading: state.isLoading,
                         onPressed: state.email.isNotEmpty
-                            ? () {
+                            ? () async {
                                 FocusScope.of(context).unfocus();
-                                viewModel.sendCode();
-                                context.push(RouterPath.emailVerification);
+                                final success = await viewModel.sendCode();
+                                if (success && context.mounted) {
+                                  context.push(RouterPath.emailVerification);
+                                } else if (state.errorMessage != null &&
+                                    context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(state.errorMessage!),
+                                    ),
+                                  );
+                                }
                               }
                             : () {},
                       ),

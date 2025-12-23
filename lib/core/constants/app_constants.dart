@@ -3,7 +3,7 @@ class AppConstants {
   AppConstants._();
 
   // API
-  // static const apiTimeout = Duration(seconds: 30);
+  static const apiBaseUrl = 'http://123.2.156.148:8080/api/';
 
   // Pagination
   // static const defaultPageSize = 20;
@@ -11,4 +11,3 @@ class AppConstants {
   // UI
   // static const minTouchTargetSize = 48.0;
 }
-

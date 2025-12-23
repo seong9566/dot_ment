@@ -117,5 +117,5 @@ class AppLocalizationsKo extends AppLocalizations {
   String get password_check_error => '비밀번호가 일치하지 않습니다';
 
   @override
-  String get password_check_finish => '완료';
+  String get password_check_finish => '가입완료';
 }

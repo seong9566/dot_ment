@@ -35,6 +35,31 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
     });
   }
 
+  Future<void> _handleVerifyCode(
+    BuildContext context,
+    EmailVerificationViewModel viewModel,
+    String email,
+  ) async {
+    FocusScope.of(context).unfocus();
+
+    final isSuccess = await viewModel.verifyCode();
+
+    if (!context.mounted) return;
+
+    if (isSuccess) {
+      context.push(
+        '${RouterPath.passwordSetting}?email=${Uri.encodeComponent(email)}',
+      );
+    } else {
+      final state = ref.read(emailVerificationViewModelProvider);
+      if (state.errorMessage != null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(emailVerificationViewModelProvider.notifier);
@@ -71,7 +96,13 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                 const SizedBox(height: 8),
                 _buildResendPrompt(viewModel, state.canResend, l10n),
                 const SizedBox(height: 8),
-                _buildNextButton(context, viewModel, state.isLoading, l10n),
+                _buildNextButton(
+                  context,
+                  viewModel,
+                  state.isLoading,
+                  state.email,
+                  l10n,
+                ),
                 SizedBox(
                   height: MediaQuery.of(context).viewInsets.bottom > 0
                       ? MediaQuery.of(context).viewInsets.bottom + AppSpacing.md
@@ -162,6 +193,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
     BuildContext context,
     EmailVerificationViewModel viewModel,
     bool isLoading,
+    String email,
     AppLocalizations l10n,
   ) {
     return SizedBox(
@@ -169,7 +201,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
       child: ElevatedButton(
         onPressed: isLoading
             ? null
-            : () => _handleVerifyCode(context, viewModel),
+            : () => _handleVerifyCode(context, viewModel, email),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.textOnPrimaryContainer,
@@ -185,20 +217,5 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
         ),
       ),
     );
-  }
-
-  Future<void> _handleVerifyCode(
-    BuildContext context,
-    EmailVerificationViewModel viewModel,
-  ) async {
-    FocusScope.of(context).unfocus();
-
-    final isSuccess = await viewModel.verifyCode();
-
-    if (!context.mounted) return;
-
-    if (isSuccess) {
-      context.push(RouterPath.passwordSetting);
-    }
   }
 }

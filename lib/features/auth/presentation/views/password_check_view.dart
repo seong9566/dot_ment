@@ -11,8 +11,13 @@ import 'package:dot_ment/features/auth/presentation/widgets/password_input_field
 
 /// 비밀번호 재확인 화면
 class PasswordCheckView extends ConsumerStatefulWidget {
-  const PasswordCheckView({super.key, required this.originalPassword});
+  const PasswordCheckView({
+    super.key,
+    required this.email,
+    required this.originalPassword,
+  });
 
+  final String email;
   final String originalPassword;
 
   @override
@@ -26,7 +31,10 @@ class _PasswordCheckViewState extends ConsumerState<PasswordCheckView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(passwordCheckViewModelProvider.notifier)
-          .setOriginalPassword(widget.originalPassword);
+          .setInitialData(
+            email: widget.email,
+            password: widget.originalPassword,
+          );
     });
   }
 
@@ -60,7 +68,7 @@ class _PasswordCheckViewState extends ConsumerState<PasswordCheckView> {
                   value: state.confirmPassword,
                   hintText: l10n.password_check_input_hint,
                   hasError: state.hasError,
-                  errorText: l10n.password_check_error,
+                  errorText: state.errorMessage ?? l10n.password_check_error,
                   onChanged: (val) => viewModel.updateConfirmPassword(val),
                 ),
                 const SizedBox(height: 24),
@@ -111,7 +119,12 @@ class _PasswordCheckViewState extends ConsumerState<PasswordCheckView> {
                 FocusScope.of(context).unfocus();
                 final success = await viewModel.submit();
                 if (success && context.mounted) {
-                  // 완료 처리 (예: 홈으로 이동 또는 성공 메시지)
+                  // 회원가입 성공 처리 (예: 로그인 화면으로 이동 또는 홈으로 이동)
+                  // 여기서는 가이드에 따라 성공 시 처리를 비워둡니다.
+                } else if (state.errorMessage != null && context.mounted) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
                 }
               },
         style: ElevatedButton.styleFrom(

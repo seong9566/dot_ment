@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:dot_ment/core/utils/error_handler.dart';
+import 'package:dot_ment/features/auth/presentation/providers/auth_providers_di.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'email_verification_viewmodel.g.dart';
@@ -12,6 +14,7 @@ class EmailVerificationState {
     this.canResend = true,
     this.hasError = false,
     this.timerSeconds = 180, // 3분
+    this.errorMessage,
   });
 
   final String code;
@@ -20,6 +23,7 @@ class EmailVerificationState {
   final bool canResend;
   final bool hasError;
   final int timerSeconds;
+  final String? errorMessage;
 
   EmailVerificationState copyWith({
     String? code,
@@ -28,6 +32,7 @@ class EmailVerificationState {
     bool? canResend,
     bool? hasError,
     int? timerSeconds,
+    String? errorMessage,
   }) {
     return EmailVerificationState(
       code: code ?? this.code,
@@ -36,6 +41,7 @@ class EmailVerificationState {
       canResend: canResend ?? this.canResend,
       hasError: hasError ?? this.hasError,
       timerSeconds: timerSeconds ?? this.timerSeconds,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
@@ -48,9 +54,6 @@ class EmailVerificationViewModel extends _$EmailVerificationViewModel {
   @override
   EmailVerificationState build() {
     ref.onDispose(() => _timer?.cancel());
-    // build 시점에 타이머를 자동으로 시작하고 싶지 않을 수 있으므로,
-    // setEmail 등 초기화 시점에 호출하도록 할 수도 있습니다.
-    // 여기서는 기본적으로 3분 타이머 상항을 가정합니다.
     return const EmailVerificationState();
   }
 
@@ -75,46 +78,63 @@ class EmailVerificationViewModel extends _$EmailVerificationViewModel {
 
   void setEmail(String email) {
     state = state.copyWith(email: email);
-    startTimer(); // 이메일 설정 시 타이머 시작
+    startTimer();
   }
 
   void updateCode(String code) {
-    state = state.copyWith(code: code, hasError: false);
+    state = state.copyWith(code: code, hasError: false, errorMessage: null);
   }
 
+  /// 인증 코드 확인 API 호출
   Future<bool> verifyCode() async {
     if (state.code.length != 6) {
       state = state.copyWith(hasError: true);
       return false;
     }
 
-    state = state.copyWith(isLoading: true, hasError: false);
-    // TODO: 실제 인증 코드 확인 로직 구현
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      state = state.copyWith(
+        isLoading: true,
+        hasError: false,
+        errorMessage: null,
+      );
 
-    // 실패 시뮬레이션 (실제로는 API 응답에 따라 결정)
-    final isSuccess = true;
+      final usecase = ref.read(verifyCodeUsecaseProvider);
+      final success = await usecase.call(state.email, state.code);
 
-    if (!isSuccess) {
-      state = state.copyWith(isLoading: false, hasError: true);
+      if (!success) {
+        state = state.copyWith(isLoading: false, hasError: true);
+        return false;
+      }
+
+      state = state.copyWith(isLoading: false, hasError: false);
+      return true;
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: handleError(e),
+      );
       return false;
     }
-
-    state = state.copyWith(isLoading: false, hasError: false);
-    return true;
   }
 
+  /// 인증 코드 재전송 API 호출
   Future<void> resendCode() async {
     if (!state.canResend) {
       return;
     }
 
-    state = state.copyWith(isLoading: true);
-    // TODO: 실제 인증 코드 재전송 로직 구현
-    await Future.delayed(const Duration(seconds: 1));
-    state = state.copyWith(isLoading: false);
+    try {
+      state = state.copyWith(isLoading: true, errorMessage: null);
 
-    // 타이머 재시작
-    startTimer();
+      final usecase = ref.read(sendVerificationCodeUsecaseProvider);
+      await usecase.call(state.email);
+
+      state = state.copyWith(isLoading: false);
+      startTimer();
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: handleError(e));
+    }
   }
 }

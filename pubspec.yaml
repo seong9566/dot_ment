@@ -12,6 +12,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
 
   cupertino_icons: ^1.0.8
 
@@ -45,8 +48,7 @@ dev_dependencies:
 
 
 flutter:
-
-
+  generate: true
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
@@ -89,38 +91,38 @@ flutter:
           weight: 700
     - family: AlegreyaSans
       fonts:
-        - asset: assets/font/AlegreyaSans-Thin.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-Thin.ttf
           weight: 100
-        - asset: assets/font/AlegreyaSans-ThinItalic.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-ThinItalic.ttf
           weight: 100
           style: italic
-        - asset: assets/font/AlegreyaSans-Light.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-Light.ttf
           weight: 300
-        - asset: assets/font/AlegreyaSans-LightItalic.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-LightItalic.ttf
           weight: 300
           style: italic
-        - asset: assets/font/AlegreyaSans-Regular.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-Regular.ttf
           weight: 400
-        - asset: assets/font/AlegreyaSans-Italic.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-Italic.ttf
           weight: 400
           style: italic
-        - asset: assets/font/AlegreyaSans-Medium.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-Medium.ttf
           weight: 500
-        - asset: assets/font/AlegreyaSans-MediumItalic.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-MediumItalic.ttf
           weight: 500
           style: italic
-        - asset: assets/font/AlegreyaSans-Bold.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-Bold.ttf
           weight: 700
-        - asset: assets/font/AlegreyaSans-BoldItalic.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-BoldItalic.ttf
           weight: 700
           style: italic
-        - asset: assets/font/AlegreyaSans-ExtraBold.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-ExtraBold.ttf
           weight: 800
-        - asset: assets/font/AlegreyaSans-ExtraBoldItalic.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-ExtraBoldItalic.ttf
           weight: 800
           style: italic
-        - asset: assets/font/AlegreyaSans-Black.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-Black.ttf
           weight: 900
-        - asset: assets/font/AlegreyaSans-BlackItalic.ttf
+        - asset: assets/font/AlegreyaSans/AlegreyaSans-BlackItalic.ttf
           weight: 900
           style: italic

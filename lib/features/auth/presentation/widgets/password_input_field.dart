@@ -10,10 +10,16 @@ class PasswordInputField extends StatefulWidget {
     super.key,
     required this.value,
     required this.onChanged,
+    this.hintText = 'Please enter your password',
+    this.hasError = false,
+    this.errorText,
   });
 
   final String value;
   final ValueChanged<String> onChanged;
+  final String hintText;
+  final bool hasError;
+  final String? errorText;
 
   @override
   State<PasswordInputField> createState() => _PasswordInputFieldState();
@@ -34,8 +40,7 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
   @override
   void didUpdateWidget(PasswordInputField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value &&
-        _controller.text != widget.value) {
+    if (oldWidget.value != widget.value && _controller.text != widget.value) {
       _controller.text = widget.value;
     }
   }
@@ -56,68 +61,44 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
       obscureText: _obscureText,
       textInputAction: TextInputAction.done,
       onSubmitted: (_) => _focusNode.unfocus(),
-      style: AppTextStyles.bodyLarge.copyWith(
-        color: AppColors.textPrimary,
-      ),
+      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
       decoration: InputDecoration(
-        hintText: 'Password',
-        hintStyle: AppTextStyles.bodyLarge.copyWith(
-          color: AppColors.textDisabled,
+        hintText: widget.hasError ? widget.errorText : widget.hintText,
+        hintStyle: AppTextStyles.bodySmall.copyWith(
+          color: widget.hasError ? AppColors.error : AppColors.textDisabled,
         ),
         filled: true,
-        fillColor: AppColors.background,
+        fillColor: Colors.white,
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: widget.hasError ? AppColors.error : Colors.grey,
+        ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.md,
         ),
         border: OutlineInputBorder(
-          borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.primary,
+          borderRadius: AppRadius.rd10,
+          borderSide: BorderSide(
+            color: widget.hasError ? AppColors.error : AppColors.primary,
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.primary,
+          borderRadius: AppRadius.rd10,
+          borderSide: BorderSide(
+            color: widget.hasError ? AppColors.error : AppColors.primary,
             width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.primary,
+          borderRadius: AppRadius.rd10,
+          borderSide: BorderSide(
+            color: widget.hasError ? AppColors.error : AppColors.primary,
             width: 2,
           ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.error,
-            width: 1,
-          ),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.error,
-            width: 2,
-          ),
-        ),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscureText ? Icons.visibility_off : Icons.visibility,
-            color: AppColors.textSecondary,
-          ),
-          onPressed: () {
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
         ),
       ),
     );
   }
 }
-

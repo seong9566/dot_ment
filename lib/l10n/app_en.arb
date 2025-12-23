@@ -1,0 +1,49 @@
+{
+  "@@locale": "en",
+  "auth_feature_business_channel": "Build\nYour Channel",
+  "auth_feature_easy_management": "Edit Design\non Mobile",
+  "auth_feature_free_page": "Free Page",
+  "auth_join": "Join",
+  "auth_login": "Login",
+  "auth_auto_login": "Remember me",
+  "auth_terms_agreement": "By signing up, you agree to the {tos} and {pp}.",
+  "@auth_terms_agreement": {
+    "placeholders": {
+      "tos": {
+        "type": "String"
+      },
+      "pp": {
+        "type": "String"
+      }
+    }
+  },
+  "auth_terms_of_service": "Terms of Service",
+  "auth_privacy_policy": "Privacy Policy",
+  "email_input_title": "Email",
+  "email_input_subtitle": "Enter your email",
+  "email_input_label": "Email",
+  "email_input_hint": "please enter your email address",
+  "email_input_send_code": "Send Code",
+  "email_input_login_prompt_prefix": "Do you have account already? ",
+  "email_verify_title": "Check your Email",
+  "email_verify_instruction": "We sent a verify code,\nplease check your mail box",
+  "email_verify_resend_prompt": "Couldn't have a Verify Code? ",
+  "email_verify_resend_button": "Re Send",
+  "email_verify_next_button": "Next",
+  "email_verify_missing_email": "No email provided",
+  "password_setting_title": "Password",
+  "password_setting_subtitle": "Please setting your save password",
+  "password_setting_requirement_title": "Password requirements",
+  "password_setting_requirement_min_length": "Minimum 8 characters",
+  "password_setting_requirement_letter": "Minimum one letter [ A-Z ]",
+  "password_setting_requirement_number": "Minimum one number [ 0-9 ]",
+  "password_setting_requirement_special": "Minimum one special character [ ! @ # $ % ^ & * ( ) ]",
+  "password_setting_input_label": "Password",
+  "password_setting_input_hint": "Please enter your password",
+  "password_setting_final_step": "Final step",
+  "password_check_title": "Password Check",
+  "password_check_subtitle": "Please enter your password again",
+  "password_check_input_hint": "Confirm Password",
+  "password_check_error": "Passwords do not match",
+  "password_check_finish": "Finish"
+}

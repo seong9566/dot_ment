@@ -9,10 +9,12 @@ class EmailInputField extends StatefulWidget {
   const EmailInputField({
     super.key,
     required this.value,
+    this.hintText,
     required this.onChanged,
   });
 
   final String value;
+  final String? hintText;
   final ValueChanged<String> onChanged;
 
   @override
@@ -55,12 +57,15 @@ class _EmailInputFieldState extends State<EmailInputField> {
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
       onSubmitted: (_) => _focusNode.unfocus(),
-      style: AppTextStyles.bodyLarge.copyWith(
-        color: AppColors.textPrimary,
-      ),
+      style: AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimary),
       decoration: InputDecoration(
-        hintText: 'E-mail',
-        hintStyle: AppTextStyles.bodyLarge.copyWith(
+        prefixIcon: const Icon(
+          Icons.mail_outline,
+          color: AppColors.textDisabled,
+          size: 20,
+        ),
+        hintText: widget.hintText ?? 'please enter your email address',
+        hintStyle: AppTextStyles.bodySmall.copyWith(
           color: AppColors.textDisabled,
         ),
         filled: true,
@@ -71,41 +76,25 @@ class _EmailInputFieldState extends State<EmailInputField> {
         ),
         border: OutlineInputBorder(
           borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.primary,
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.primary,
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.primary,
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.error,
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: AppColors.error, width: 1),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: AppRadius.md,
-          borderSide: const BorderSide(
-            color: AppColors.error,
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
       ),
     );
   }
 }
-

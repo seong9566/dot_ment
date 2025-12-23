@@ -1,3 +1,4 @@
+import 'package:dot_ment/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:dot_ment/core/theme/app_colors.dart';
 import 'package:dot_ment/core/theme/app_text_styles.dart';
@@ -16,17 +17,16 @@ class SendCodeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
-      height: 56,
+      height: 52,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.textOnPrimaryContainer,
           elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.md,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.rd10),
           disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.6),
         ),
         child: isLoading
@@ -38,15 +38,22 @@ class SendCodeButton extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
               )
-            : Text(
-                'Send Code',
-                style: AppTextStyles.bodyLarge.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    l10n.email_input_send_code,
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.textOnPrimaryContainer,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.arrow_forward, size: 20),
+                ],
               ),
       ),
     );
   }
 }
-

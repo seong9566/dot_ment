@@ -1,21 +1,19 @@
+import 'package:dot_ment/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dot_ment/core/theme/app_colors.dart';
 import 'package:dot_ment/core/theme/app_text_styles.dart';
 import 'package:dot_ment/core/theme/app_spacing.dart';
+import 'package:dot_ment/core/theme/app_radius.dart';
 import 'package:dot_ment/core/router/router_path.dart';
+import 'package:dot_ment/core/widgets/custom_app_bar.dart';
 import 'package:dot_ment/features/auth/presentation/viewmodels/email_verification_viewmodel.dart';
 import 'package:dot_ment/features/auth/presentation/widgets/verification_code_input.dart';
-import 'package:dot_ment/features/auth/presentation/widgets/resend_button.dart';
-import 'package:dot_ment/features/auth/presentation/widgets/checked_button.dart';
 
 /// 이메일 코드 확인 화면
 class EmailVerificationView extends ConsumerStatefulWidget {
-  const EmailVerificationView({
-    super.key,
-    this.email,
-  });
+  const EmailVerificationView({super.key, this.email});
 
   final String? email;
 
@@ -24,8 +22,7 @@ class EmailVerificationView extends ConsumerStatefulWidget {
       _EmailVerificationViewState();
 }
 
-class _EmailVerificationViewState
-    extends ConsumerState<EmailVerificationView> {
+class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
   @override
   void initState() {
     super.initState();
@@ -40,13 +37,14 @@ class _EmailVerificationViewState
 
   @override
   Widget build(BuildContext context) {
-    final viewModel =
-        ref.watch(emailVerificationViewModelProvider.notifier);
+    final viewModel = ref.watch(emailVerificationViewModelProvider.notifier);
     final state = ref.watch(emailVerificationViewModelProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
+      appBar: const CustomAppBar.leftBack(),
       body: SafeArea(
         child: GestureDetector(
           onTap: () {
@@ -54,41 +52,32 @@ class _EmailVerificationViewState
           },
           behavior: HitTestBehavior.opaque,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pd30),
             child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: AppSpacing.xxl),
-              _buildHeader(),
-              const SizedBox(height: AppSpacing.md),
-              _buildInstructionText(state.email),
-              const SizedBox(height: AppSpacing.xxl),
-              VerificationCodeInput(
-                code: state.code,
-                hasError: state.hasError,
-                onCodeChanged: (code) => viewModel.updateCode(code),
-              ),
-              if (state.hasError) ...[
-                const SizedBox(height: AppSpacing.sm),
-                _buildErrorMessage(),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: AppSpacing.xl),
+                _buildHeader(l10n),
+                const SizedBox(height: AppSpacing.pd16),
+                _buildInstructionText(state.email, l10n),
+                const SizedBox(height: 64),
+                _buildTimer(viewModel.timerText),
+                const SizedBox(height: 8),
+                VerificationCodeInput(
+                  code: state.code,
+                  hasError: state.hasError,
+                  onCodeChanged: (code) => viewModel.updateCode(code),
+                ),
+                const SizedBox(height: 8),
+                _buildResendPrompt(viewModel, state.canResend, l10n),
+                const SizedBox(height: 8),
+                _buildNextButton(context, viewModel, state.isLoading, l10n),
+                SizedBox(
+                  height: MediaQuery.of(context).viewInsets.bottom > 0
+                      ? MediaQuery.of(context).viewInsets.bottom + AppSpacing.md
+                      : AppSpacing.xl,
+                ),
               ],
-              const SizedBox(height: AppSpacing.xl),
-              ResendButton(
-                isLoading: state.isLoading,
-                canResend: state.canResend,
-                onPressed: () => viewModel.resendCode(),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              CheckedButton(
-                isLoading: state.isLoading,
-                onPressed: () => _handleVerifyCode(context, viewModel),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).viewInsets.bottom > 0
-                    ? MediaQuery.of(context).viewInsets.bottom + AppSpacing.md
-                    : AppSpacing.xl,
-              ),
-            ],
             ),
           ),
         ),
@@ -96,33 +85,104 @@ class _EmailVerificationViewState
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppLocalizations l10n) {
     return Text(
-      'Check Email Box',
+      l10n.email_verify_title,
       style: AppTextStyles.heading1.copyWith(
+        fontSize: 40,
         color: AppColors.primary,
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.normal,
       ),
     );
   }
 
-  Widget _buildInstructionText(String email) {
-    return RichText(
-      text: TextSpan(
-        style: AppTextStyles.bodyLarge.copyWith(
-          color: AppColors.textSecondary,
+  Widget _buildInstructionText(String email, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          email.isEmpty ? l10n.email_verify_missing_email : email,
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: AppColors.textSecondary,
+            decoration: TextDecoration.underline,
+          ),
         ),
-        children: [
-          const TextSpan(text: 'We sent to '),
-          TextSpan(
-            text: email.isEmpty ? 'your email' : email,
-            style: AppTextStyles.bodyLarge.copyWith(
-              color: AppColors.textPrimary,
-              decoration: TextDecoration.underline,
+        const SizedBox(height: 8),
+        Text(
+          l10n.email_verify_instruction,
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimer(String timerText) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Text(
+        timerText,
+        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+      ),
+    );
+  }
+
+  Widget _buildResendPrompt(
+    EmailVerificationViewModel viewModel,
+    bool canResend,
+    AppLocalizations l10n,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          l10n.email_verify_resend_prompt,
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: AppColors.textSecondary,
+            fontSize: 14,
+          ),
+        ),
+        GestureDetector(
+          onTap: canResend ? () => viewModel.resendCode() : null,
+          child: Text(
+            l10n.email_verify_resend_button,
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: canResend ? AppColors.primary : AppColors.textDisabled,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
             ),
           ),
-          const TextSpan(text: ' a verify code please check your mail box'),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNextButton(
+    BuildContext context,
+    EmailVerificationViewModel viewModel,
+    bool isLoading,
+    AppLocalizations l10n,
+  ) {
+    return SizedBox(
+      height: 52,
+      child: ElevatedButton(
+        onPressed: isLoading
+            ? null
+            : () => _handleVerifyCode(context, viewModel),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.textOnPrimaryContainer,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.rd10),
+        ),
+        child: Text(
+          l10n.email_verify_next_button,
+          style: AppTextStyles.heading3.copyWith(
+            fontWeight: FontWeight.normal,
+            color: AppColors.textOnPrimaryContainer,
+          ),
+        ),
       ),
     );
   }
@@ -131,64 +191,14 @@ class _EmailVerificationViewState
     BuildContext context,
     EmailVerificationViewModel viewModel,
   ) async {
-    // Focus 해제
     FocusScope.of(context).unfocus();
-    
+
     final isSuccess = await viewModel.verifyCode();
-    
+
     if (!context.mounted) return;
 
     if (isSuccess) {
-      // 성공 Dialog 표시
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) => Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.check_circle,
-                  color: AppColors.success,
-                  size: 64,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  'Success',
-                  style: AppTextStyles.heading3.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-
-      // 1초 후 Dialog 닫고 비밀번호 입력 화면으로 이동
-      await Future.delayed(const Duration(seconds: 1));
-      
-      if (!context.mounted) return;
-      
-      Navigator.of(context).pop(); // Dialog 닫기
       context.push(RouterPath.passwordSetting);
     }
-    // 실패 시 에러 상태는 이미 ViewModel에서 설정됨
-  }
-
-  Widget _buildErrorMessage() {
-    return Text(
-      'Authentication failed. Please try again.',
-      style: AppTextStyles.bodyMedium.copyWith(
-        color: AppColors.error,
-      ),
-      textAlign: TextAlign.center,
-    );
   }
 }
-

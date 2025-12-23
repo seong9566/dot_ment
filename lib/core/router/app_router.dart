@@ -4,9 +4,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dot_ment/core/router/router_path.dart';
 import 'package:dot_ment/features/auth/presentation/views/auth_view.dart';
 import 'package:dot_ment/features/auth/presentation/views/login_view.dart';
-import 'package:dot_ment/features/auth/presentation/views/join_view.dart';
+import 'package:dot_ment/features/auth/presentation/views/email_input_view.dart';
 import 'package:dot_ment/features/auth/presentation/views/email_verification_view.dart';
 import 'package:dot_ment/features/auth/presentation/views/password_setting_view.dart';
+import 'package:dot_ment/features/auth/presentation/views/password_check_view.dart';
 
 part 'app_router.g.dart';
 
@@ -34,12 +35,12 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: RouterPath.join,
-        name: 'join',
-        builder: (context, state) => const JoinView(),
+        name: 'email_input',
+        builder: (context, state) => const EmailInputView(),
       ),
       GoRoute(
         path: RouterPath.emailVerification,
-        name: 'email-verification',
+        name: 'email_verification',
         builder: (context, state) {
           final email = state.uri.queryParameters['email'];
           return EmailVerificationView(email: email);
@@ -47,8 +48,17 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: RouterPath.passwordSetting,
-        name: 'password-setting',
+        name: 'password_setting',
         builder: (context, state) => const PasswordSettingView(),
+      ),
+      GoRoute(
+        path: RouterPath.passwordCheck,
+        name: 'password_check',
+        builder: (context, state) {
+          final originalPassword =
+              state.uri.queryParameters['originalPassword'] ?? '';
+          return PasswordCheckView(originalPassword: originalPassword);
+        },
       ),
     ],
   );

@@ -18,8 +18,7 @@ class VerificationCodeInput extends StatefulWidget {
   final bool hasError;
 
   @override
-  State<VerificationCodeInput> createState() =>
-      _VerificationCodeInputState();
+  State<VerificationCodeInput> createState() => _VerificationCodeInputState();
 }
 
 class _VerificationCodeInputState extends State<VerificationCodeInput> {
@@ -100,16 +99,14 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
       children: List.generate(6, (index) {
         return SizedBox(
           width: 48,
-          height: 48,
+          height: 52,
           child: TextField(
             controller: _controllers[index],
             focusNode: _focusNodes[index],
             textAlign: TextAlign.center,
             maxLength: 1,
             keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             style: AppTextStyles.heading3.copyWith(
               color: AppColors.textPrimary,
             ),
@@ -119,39 +116,33 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
               fillColor: AppColors.background,
               contentPadding: EdgeInsets.zero,
               border: OutlineInputBorder(
-                borderRadius: AppRadius.sm,
+                borderRadius: AppRadius.rd10,
                 borderSide: BorderSide(
                   color: widget.hasError ? AppColors.error : AppColors.primary,
                   width: 1,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: AppRadius.sm,
+                borderRadius: AppRadius.rd10,
                 borderSide: BorderSide(
                   color: widget.hasError ? AppColors.error : AppColors.primary,
                   width: 1,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: AppRadius.sm,
+                borderRadius: AppRadius.rd10,
                 borderSide: BorderSide(
                   color: widget.hasError ? AppColors.error : AppColors.primary,
                   width: 2,
                 ),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: AppRadius.sm,
-                borderSide: const BorderSide(
-                  color: AppColors.error,
-                  width: 1,
-                ),
+                borderRadius: AppRadius.rd10,
+                borderSide: const BorderSide(color: AppColors.error, width: 1),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: AppRadius.sm,
-                borderSide: const BorderSide(
-                  color: AppColors.error,
-                  width: 2,
-                ),
+                borderRadius: AppRadius.rd10,
+                borderSide: const BorderSide(color: AppColors.error, width: 2),
               ),
             ),
             onChanged: (value) => _onChanged(index, value),
@@ -173,4 +164,3 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
     );
   }
 }
-

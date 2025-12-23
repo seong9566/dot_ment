@@ -6,30 +6,34 @@ part 'password_setting_viewmodel.g.dart';
 class PasswordSettingState {
   const PasswordSettingState({
     this.password = '',
-    this.hasCapitalLetter = false,
+    this.hasMinLength = false,
+    this.hasLetter = false,
     this.hasNumber = false,
     this.hasSymbol = false,
     this.isLoading = false,
   });
 
   final String password;
-  final bool hasCapitalLetter;
+  final bool hasMinLength;
+  final bool hasLetter;
   final bool hasNumber;
   final bool hasSymbol;
   final bool isLoading;
 
-  bool get isValid => hasCapitalLetter && hasNumber && hasSymbol;
+  bool get isValid => hasMinLength && hasLetter && hasNumber && hasSymbol;
 
   PasswordSettingState copyWith({
     String? password,
-    bool? hasCapitalLetter,
+    bool? hasMinLength,
+    bool? hasLetter,
     bool? hasNumber,
     bool? hasSymbol,
     bool? isLoading,
   }) {
     return PasswordSettingState(
       password: password ?? this.password,
-      hasCapitalLetter: hasCapitalLetter ?? this.hasCapitalLetter,
+      hasMinLength: hasMinLength ?? this.hasMinLength,
+      hasLetter: hasLetter ?? this.hasLetter,
       hasNumber: hasNumber ?? this.hasNumber,
       hasSymbol: hasSymbol ?? this.hasSymbol,
       isLoading: isLoading ?? this.isLoading,
@@ -46,13 +50,15 @@ class PasswordSettingViewModel extends _$PasswordSettingViewModel {
   }
 
   void updatePassword(String password) {
-    final hasCapitalLetter = password.contains(RegExp(r'[A-Z]'));
+    final hasMinLength = password.length >= 8;
+    final hasLetter = password.contains(RegExp(r'[A-Za-z]'));
     final hasNumber = password.contains(RegExp(r'[0-9]'));
-    final hasSymbol = password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+    final hasSymbol = password.contains(RegExp(r'[!@#$%^&*()]'));
 
     state = state.copyWith(
       password: password,
-      hasCapitalLetter: hasCapitalLetter,
+      hasMinLength: hasMinLength,
+      hasLetter: hasLetter,
       hasNumber: hasNumber,
       hasSymbol: hasSymbol,
     );
@@ -60,7 +66,6 @@ class PasswordSettingViewModel extends _$PasswordSettingViewModel {
 
   Future<bool> submitPassword() async {
     if (!state.isValid) {
-      // TODO: 에러 메시지 표시
       return false;
     }
 
@@ -71,4 +76,3 @@ class PasswordSettingViewModel extends _$PasswordSettingViewModel {
     return true;
   }
 }
-

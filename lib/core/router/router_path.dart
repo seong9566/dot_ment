@@ -8,4 +8,5 @@ class RouterPath {
   static const join = '/join';
   static const emailVerification = '/email-verification';
   static const passwordSetting = '/password-setting';
+  static const passwordCheck = '/password-check';
 }

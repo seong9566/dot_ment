@@ -1,3 +1,4 @@
+import 'package:dot_ment/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -31,9 +32,7 @@ class _HomeViewState extends State<HomeView> {
           },
         ),
       )
-      ..loadRequest(
-        Uri.parse('https://flutter.dev'),
-      ); // TODO: 실제 웹 서비스 URL로 변경 필요
+      ..loadRequest(Uri.parse(AppConstants.webBaseUrl));
   }
 
   @override

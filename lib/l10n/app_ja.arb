@@ -15,6 +15,7 @@
   "email_input_hint": "メールアドレスを入力してください",
   "email_input_send_code": "認証코드送信",
   "email_input_login_prompt_prefix": "既にアカウントをお持ちですか？ ",
+  "email_input_login_prompt_button": "ログイン",
   "email_verify_title": "メール認証",
   "email_verify_instruction": "メールに送信された\n6桁の認証コードを入力してください。",
   "email_verify_resend_prompt": "認証コードが届きませんか？ ",

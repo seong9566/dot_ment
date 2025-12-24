@@ -190,6 +190,12 @@ abstract class AppLocalizations {
   /// **'Do you have account already? '**
   String get email_input_login_prompt_prefix;
 
+  /// No description provided for @email_input_login_prompt_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get email_input_login_prompt_button;
+
   /// No description provided for @email_verify_title.
   ///
   /// In en, this message translates to:

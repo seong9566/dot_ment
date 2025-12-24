@@ -3,7 +3,7 @@ class AppConstants {
   AppConstants._();
 
   // API
-  static const apiBaseUrl = 'http://123.2.156.148:8080/api/';
+  static const apiBaseUrl = 'http://192.168.10.16:8080/api/';
 
   // Pagination
   // static const defaultPageSize = 20;

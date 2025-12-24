@@ -40,7 +40,7 @@ class _PasswordCheckViewState extends ConsumerState<PasswordCheckView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(passwordCheckViewModelProvider.notifier);
+    final viewModel = ref.read(passwordCheckViewModelProvider.notifier);
     final state = ref.watch(passwordCheckViewModelProvider);
     final l10n = AppLocalizations.of(context)!;
 

@@ -15,6 +15,7 @@
   "email_input_hint": "이메일을 입력해주세요",
   "email_input_send_code": "인증코드 전송",
   "email_input_login_prompt_prefix": "이미 계정이 있으신가요? ",
+  "email_input_login_prompt_button": "로그인",
   "email_verify_title": "이메일 인증",
   "email_verify_instruction": "이메일로 전송된\n6자리 인증코드를 입력해주세요.",
   "email_verify_resend_prompt": "인증코드를 받지 못했나요? ",

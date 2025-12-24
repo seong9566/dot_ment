@@ -48,7 +48,7 @@ class AuthView extends ConsumerWidget {
                     context.push(RouterPath.join);
                   },
                 ),
-                const SizedBox(height: AppSpacing.pd40),
+                const SizedBox(height: AppSpacing.pd20),
                 AuthButton(
                   text: l10n.auth_login,
                   isPrimary: false,

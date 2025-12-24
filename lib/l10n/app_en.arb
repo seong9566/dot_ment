@@ -25,6 +25,7 @@
   "email_input_hint": "please enter your email address",
   "email_input_send_code": "Send Code",
   "email_input_login_prompt_prefix": "Do you have account already? ",
+  "email_input_login_prompt_button": "Login",
   "email_verify_title": "Check your Email",
   "email_verify_instruction": "We sent a verify code,\nplease check your mail box",
   "email_verify_resend_prompt": "Couldn't have a Verify Code? ",

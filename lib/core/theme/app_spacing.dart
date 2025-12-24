@@ -10,6 +10,7 @@ class AppSpacing {
   static const xxl = 48.0;
 
   static const pd16 = 16.0;
+  static const pd20 = 20.0;
   static const pd30 = 30.0;
   static const pd40 = 40.0;
 }

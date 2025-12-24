@@ -1,3 +1,4 @@
+import 'package:dot_ment/features/auth/presentation/providers/auth_providers_di.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'password_setting_viewmodel.g.dart';
@@ -74,5 +75,21 @@ class PasswordSettingViewModel extends _$PasswordSettingViewModel {
     await Future.delayed(const Duration(seconds: 1));
     state = state.copyWith(isLoading: false);
     return true;
+  }
+
+  /// 로그인 API 호출 (Login 모드일 때 사용)
+  Future<bool> login(String email) async {
+    if (!state.isValid) return false;
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final usecase = ref.read(loginUsecaseProvider);
+      final success = await usecase.call(email, state.password);
+      state = state.copyWith(isLoading: false);
+      return success;
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      rethrow;
+    }
   }
 }

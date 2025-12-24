@@ -1,4 +1,6 @@
+import 'package:dot_ment/core/router/router_path.dart';
 import 'package:dot_ment/core/widgets/custom_app_bar.dart';
+import 'package:dot_ment/features/auth/presentation/widgets/terms_text.dart';
 import 'package:dot_ment/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +10,7 @@ import 'package:dot_ment/core/theme/app_spacing.dart';
 import 'package:dot_ment/features/auth/presentation/viewmodels/login_viewmodel.dart';
 import 'package:dot_ment/features/auth/presentation/widgets/email_input_field.dart';
 import 'package:dot_ment/features/auth/presentation/widgets/send_code_button.dart';
+import 'package:go_router/go_router.dart';
 
 /// 로그인 화면
 class LoginView extends ConsumerWidget {
@@ -15,32 +18,42 @@ class LoginView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(loginViewModelProvider.notifier);
+    final viewModel = ref.read(loginViewModelProvider.notifier);
     final state = ref.watch(loginViewModelProvider);
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      resizeToAvoidBottomInset: true,
       appBar: const CustomAppBar.leftBack(),
+      // 키보드가 올라와도 화면이 밀려 올라가지 않도록 설정
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                  },
-                  behavior: HitTestBehavior.opaque,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          behavior: HitTestBehavior.opaque,
+          child: Stack(
+            children: [
+              // 메인 컨텐츠 영역 (스크롤 가능)
+              Positioned.fill(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: AppSpacing.xl),
                       _buildHeader(l10n),
                       const SizedBox(height: AppSpacing.xxl),
+                      Text(
+                        l10n.email_input_label,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontSize: 14,
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
                       EmailInputField(
                         value: state.email,
                         hintText: l10n.email_input_hint,
@@ -48,28 +61,34 @@ class LoginView extends ConsumerWidget {
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       SendCodeButton(
-                        isLoading: state.isLoading,
                         onPressed: state.email.isNotEmpty
                             ? () {
                                 FocusScope.of(context).unfocus();
-                                viewModel.sendCode();
+                                context.push(
+                                  RouterPath.passwordSetting,
+                                  extra: {
+                                    'email': state.email,
+                                    'isJoin': false,
+                                  },
+                                );
                               }
                             : () {},
                       ),
-                      const SizedBox(height: AppSpacing.xl),
-                      _buildLoginPrompt(l10n),
-                      SizedBox(
-                        height: MediaQuery.of(context).viewInsets.bottom > 0
-                            ? MediaQuery.of(context).viewInsets.bottom +
-                                  AppSpacing.md
-                            : AppSpacing.xl,
-                      ),
+                      // 하단 약관 텍스트를 위한 여백
+                      const SizedBox(height: 100),
                     ],
                   ),
                 ),
               ),
-            );
-          },
+              // 하단 고정 약관 텍스트
+              const Positioned(
+                bottom: AppSpacing.lg,
+                left: 0,
+                right: 0,
+                child: TermsText(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -80,7 +99,7 @@ class LoginView extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.auth_login,
+          'DOTMENT',
           style: AppTextStyles.heading1.copyWith(
             fontSize: 40,
             color: AppColors.primary,
@@ -95,17 +114,6 @@ class LoginView extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildLoginPrompt(AppLocalizations l10n) {
-    return Center(
-      child: Text(
-        l10n.email_input_login_prompt_prefix,
-        style: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.textSecondary,
-        ),
-      ),
     );
   }
 }

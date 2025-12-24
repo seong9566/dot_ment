@@ -13,9 +13,10 @@ import 'package:dot_ment/features/auth/presentation/widgets/verification_code_in
 
 /// 이메일 코드 확인 화면
 class EmailVerificationView extends ConsumerStatefulWidget {
-  const EmailVerificationView({super.key, this.email});
+  const EmailVerificationView({super.key, this.email, this.isJoin = true});
 
   final String? email;
+  final bool isJoin;
 
   @override
   ConsumerState<EmailVerificationView> createState() =>
@@ -48,7 +49,8 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
 
     if (isSuccess) {
       context.push(
-        '${RouterPath.passwordSetting}?email=${Uri.encodeComponent(email)}',
+        RouterPath.passwordSetting,
+        extra: {'email': email, 'isJoin': widget.isJoin},
       );
     } else {
       final state = ref.read(emailVerificationViewModelProvider);
@@ -62,7 +64,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(emailVerificationViewModelProvider.notifier);
+    final viewModel = ref.read(emailVerificationViewModelProvider.notifier);
     final state = ref.watch(emailVerificationViewModelProvider);
     final l10n = AppLocalizations.of(context)!;
 

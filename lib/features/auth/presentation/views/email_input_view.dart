@@ -1,5 +1,6 @@
 import 'package:dot_ment/core/router/router_path.dart';
 import 'package:dot_ment/core/widgets/custom_app_bar.dart';
+import 'package:dot_ment/features/auth/presentation/viewmodels/email_verification_viewmodel.dart';
 import 'package:dot_ment/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,8 +19,14 @@ class EmailInputView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(joinViewModelProvider.notifier);
+    final viewModel = ref.read(joinViewModelProvider.notifier);
+    final emailVerificationViewModel = ref.read(
+      emailVerificationViewModelProvider.notifier,
+    );
     final state = ref.watch(joinViewModelProvider);
+    final emailVerificationState = ref.watch(
+      emailVerificationViewModelProvider,
+    );
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -61,18 +68,28 @@ class EmailInputView extends ConsumerWidget {
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       SendCodeButton(
-                        isLoading: state.isLoading,
                         onPressed: state.email.isNotEmpty
                             ? () async {
                                 FocusScope.of(context).unfocus();
-                                final success = await viewModel.sendCode();
+                                final success = await emailVerificationViewModel
+                                    .sendCode(state.email);
                                 if (success && context.mounted) {
-                                  context.push(RouterPath.emailVerification);
-                                } else if (state.errorMessage != null &&
+                                  context.push(
+                                    RouterPath.emailVerification,
+                                    extra: {
+                                      'email': state.email,
+                                      'isJoin': true,
+                                    },
+                                  );
+                                } else if (emailVerificationState
+                                            .errorMessage !=
+                                        null &&
                                     context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(state.errorMessage!),
+                                      content: Text(
+                                        emailVerificationState.errorMessage!,
+                                      ),
                                     ),
                                   );
                                 }
@@ -80,7 +97,7 @@ class EmailInputView extends ConsumerWidget {
                             : () {},
                       ),
                       const SizedBox(height: 4),
-                      _buildLoginPrompt(l10n),
+                      _buildLoginPrompt(context, l10n),
                       // 하단 약관 텍스트를 위한 여백
                       const SizedBox(height: 100),
                     ],
@@ -125,12 +142,31 @@ class EmailInputView extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoginPrompt(AppLocalizations l10n) {
+  Widget _buildLoginPrompt(BuildContext context, AppLocalizations l10n) {
     return Center(
-      child: Text(
-        l10n.email_input_login_prompt_prefix,
-        style: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.textSecondary,
+      child: GestureDetector(
+        onTap: () {
+          //포커스
+          FocusScope.of(context).unfocus();
+          context.replace(RouterPath.login);
+        },
+        child: RichText(
+          text: TextSpan(
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: 14,
+            ),
+            children: [
+              TextSpan(text: l10n.email_input_login_prompt_prefix),
+              TextSpan(
+                text: l10n.email_input_login_prompt_button,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

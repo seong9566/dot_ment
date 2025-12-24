@@ -137,4 +137,20 @@ class EmailVerificationViewModel extends _$EmailVerificationViewModel {
       state = state.copyWith(isLoading: false, errorMessage: handleError(e));
     }
   }
+
+  /// 인증 코드 전송 API 호출
+  Future<bool> sendCode(String email) async {
+    try {
+      state = state.copyWith(email: email, isLoading: true, errorMessage: null);
+
+      final usecase = ref.read(sendVerificationCodeUsecaseProvider);
+      final success = await usecase.call(email);
+
+      state = state.copyWith(isLoading: false);
+      return success;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: handleError(e));
+      return false;
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:dot_ment/features/home/presentation/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -29,6 +30,11 @@ GoRouter goRouter(Ref ref) {
         builder: (context, state) => const AuthView(),
       ),
       GoRoute(
+        path: RouterPath.home,
+        name: 'home',
+        builder: (context, state) => const HomeView(),
+      ),
+      GoRoute(
         path: RouterPath.login,
         name: 'login',
         builder: (context, state) => const LoginView(),
@@ -42,25 +48,30 @@ GoRouter goRouter(Ref ref) {
         path: RouterPath.emailVerification,
         name: 'email_verification',
         builder: (context, state) {
-          final email = state.uri.queryParameters['email'];
-          return EmailVerificationView(email: email);
+          final extra = state.extra as Map<String, dynamic>?;
+          final email = extra?['email'] as String?;
+          final isJoin = extra?['isJoin'] as bool? ?? true;
+          return EmailVerificationView(email: email, isJoin: isJoin);
         },
       ),
       GoRoute(
         path: RouterPath.passwordSetting,
         name: 'password_setting',
         builder: (context, state) {
-          final email = state.uri.queryParameters['email'];
-          return PasswordSettingView(email: email);
+          final extra = state.extra as Map<String, dynamic>?;
+          final email = extra?['email'] as String?;
+          final isJoin = extra?['isJoin'] as bool? ?? true;
+          return PasswordSettingView(email: email, isJoin: isJoin);
         },
       ),
       GoRoute(
         path: RouterPath.passwordCheck,
         name: 'password_check',
         builder: (context, state) {
-          final email = state.uri.queryParameters['email'] ?? '';
-          final originalPassword =
-              state.uri.queryParameters['originalPassword'] ?? '';
+          final extra = state.extra as Map<String, dynamic>?;
+          final email = extra?['email'] as String? ?? '';
+          final originalPassword = extra?['originalPassword'] as String? ?? '';
+
           return PasswordCheckView(
             email: email,
             originalPassword: originalPassword,

@@ -56,6 +56,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get email_input_login_prompt_prefix => 'Do you have account already? ';
 
   @override
+  String get email_input_login_prompt_button => 'Login';
+
+  @override
   String get email_verify_title => 'Check your Email';
 
   @override

@@ -32,20 +32,4 @@ class JoinViewModel extends _$JoinViewModel {
   void updateEmail(String email) {
     state = state.copyWith(email: email, errorMessage: null);
   }
-
-  /// 인증 코드 전송 API 호출
-  Future<bool> sendCode() async {
-    try {
-      state = state.copyWith(isLoading: true, errorMessage: null);
-
-      final usecase = ref.read(sendVerificationCodeUsecaseProvider);
-      final success = await usecase.call(state.email);
-
-      state = state.copyWith(isLoading: false);
-      return success;
-    } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: handleError(e));
-      return false;
-    }
-  }
 }

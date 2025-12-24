@@ -56,6 +56,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get email_input_login_prompt_prefix => '이미 계정이 있으신가요? ';
 
   @override
+  String get email_input_login_prompt_button => '로그인';
+
+  @override
   String get email_verify_title => '이메일 인증';
 
   @override

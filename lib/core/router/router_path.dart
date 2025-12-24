@@ -9,4 +9,5 @@ class RouterPath {
   static const emailVerification = '/email-verification';
   static const passwordSetting = '/password-setting';
   static const passwordCheck = '/password-check';
+  static const home = '/home';
 }

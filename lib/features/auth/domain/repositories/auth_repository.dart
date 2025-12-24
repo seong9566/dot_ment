@@ -8,4 +8,7 @@ abstract class AuthRepository {
 
   /// 회원가입 완료 (사용자 추가)
   Future<bool> addUser(String email, String password);
+
+  /// 로그인
+  Future<bool> login(String email, String password);
 }

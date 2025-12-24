@@ -14,13 +14,14 @@ import 'package:dot_ment/features/auth/presentation/widgets/password_requirement
 
 /// 비밀번호 설정 화면
 class PasswordSettingView extends ConsumerWidget {
-  const PasswordSettingView({super.key, this.email});
+  const PasswordSettingView({super.key, this.email, this.isJoin = true});
 
   final String? email;
+  final bool isJoin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(passwordSettingViewModelProvider.notifier);
+    final viewModel = ref.read(passwordSettingViewModelProvider.notifier);
     final state = ref.watch(passwordSettingViewModelProvider);
     final l10n = AppLocalizations.of(context)!;
 
@@ -56,12 +57,7 @@ class PasswordSettingView extends ConsumerWidget {
                   onChanged: (val) => viewModel.updatePassword(val),
                 ),
                 const SizedBox(height: 24),
-                _buildFinalStepButton(
-                  context,
-                  l10n,
-                  state.password,
-                  state.isValid,
-                ),
+                _buildFinalStepButton(context, l10n, viewModel, state),
                 SizedBox(
                   height: MediaQuery.of(context).viewInsets.bottom > 0
                       ? MediaQuery.of(context).viewInsets.bottom + AppSpacing.md
@@ -144,18 +140,35 @@ class PasswordSettingView extends ConsumerWidget {
   Widget _buildFinalStepButton(
     BuildContext context,
     AppLocalizations l10n,
-    String originalPassword,
-    bool isValid,
+    PasswordSettingViewModel viewModel,
+    PasswordSettingState state,
   ) {
     return SizedBox(
       height: 52,
       child: ElevatedButton(
-        onPressed: isValid
-            ? () {
+        onPressed: state.isValid && !state.isLoading
+            ? () async {
                 FocusScope.of(context).unfocus();
-                context.push(
-                  '${RouterPath.passwordCheck}?email=${Uri.encodeComponent(email ?? '')}&originalPassword=${Uri.encodeComponent(originalPassword)}',
-                );
+                if (isJoin) {
+                  // 회원가입 모드: 비밀번호 확인 화면으로 이동
+                  context.push(
+                    RouterPath.passwordCheck,
+                    extra: {
+                      'email': email ?? '',
+                      'originalPassword': state.password,
+                    },
+                  );
+                } else {
+                  // 로그인 모드: 로그인 API 호출 후 홈으로 이동
+                  final success = await viewModel.login(email ?? '');
+                  if (success && context.mounted) {
+                    context.go(RouterPath.home);
+                  } else if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('로그인에 실패했습니다.')),
+                    );
+                  }
+                }
               }
             : null,
         style: ElevatedButton.styleFrom(
@@ -164,13 +177,22 @@ class PasswordSettingView extends ConsumerWidget {
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: AppRadius.rd10),
         ),
-        child: Text(
-          l10n.password_setting_final_step,
-          style: AppTextStyles.heading3.copyWith(
-            fontWeight: FontWeight.normal,
-            color: AppColors.textOnPrimaryContainer,
-          ),
-        ),
+        child: state.isLoading
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(
+                isJoin ? l10n.password_setting_final_step : l10n.auth_login,
+                style: AppTextStyles.heading3.copyWith(
+                  fontWeight: FontWeight.normal,
+                  color: AppColors.textOnPrimaryContainer,
+                ),
+              ),
       ),
     );
   }

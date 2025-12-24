@@ -75,4 +75,26 @@ class AuthRepositoryImpl implements AuthRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<bool> login(String email, String password) async {
+    try {
+      final reqDto = AddUserReqDto(loginId: email, loginPw: password);
+
+      final response = await _dio.post(
+        'v1/user/login/access',
+        data: reqDto.toMap(),
+      );
+
+      final baseResponse = BaseResponse<bool>.fromJson(
+        response.data as Map<String, dynamic>,
+        (data) => data as bool,
+      );
+
+      return baseResponse.isSuccess && (baseResponse.data ?? false);
+    } catch (e) {
+      _logger.e('로그인 중 에러 발생', error: e);
+      rethrow;
+    }
+  }
 }

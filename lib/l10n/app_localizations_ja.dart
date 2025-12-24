@@ -56,6 +56,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get email_input_login_prompt_prefix => '既にアカウントをお持ちですか？ ';
 
   @override
+  String get email_input_login_prompt_button => 'ログイン';
+
+  @override
   String get email_verify_title => 'メール認証';
 
   @override

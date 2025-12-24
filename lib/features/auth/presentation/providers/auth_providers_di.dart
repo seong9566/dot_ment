@@ -4,6 +4,7 @@ import 'package:dot_ment/features/auth/domain/repositories/auth_repository.dart'
 import 'package:dot_ment/features/auth/domain/usecases/add_user_usecase.dart';
 import 'package:dot_ment/features/auth/domain/usecases/send_verification_code_usecase.dart';
 import 'package:dot_ment/features/auth/domain/usecases/verify_code_usecase.dart';
+import 'package:dot_ment/features/auth/domain/usecases/login_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_providers_di.g.dart';
@@ -34,4 +35,11 @@ VerifyCodeUsecase verifyCodeUsecase(Ref ref) {
 AddUserUsecase addUserUsecase(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return AddUserUsecase(repository);
+}
+
+/// Login UseCase Provider
+@riverpod
+LoginUsecase loginUsecase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return LoginUsecase(repository);
 }

@@ -1,3 +1,4 @@
+import 'package:dot_ment/core/router/router_path.dart';
 import 'package:dot_ment/core/widgets/custom_app_bar.dart';
 import 'package:dot_ment/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:dot_ment/core/theme/app_spacing.dart';
 import 'package:dot_ment/core/theme/app_radius.dart';
 import 'package:dot_ment/features/auth/presentation/viewmodels/password_check_viewmodel.dart';
 import 'package:dot_ment/features/auth/presentation/widgets/password_input_field.dart';
+import 'package:go_router/go_router.dart';
 
 /// 비밀번호 재확인 화면
 class PasswordCheckView extends ConsumerStatefulWidget {
@@ -121,6 +123,8 @@ class _PasswordCheckViewState extends ConsumerState<PasswordCheckView> {
                 if (success && context.mounted) {
                   // 회원가입 성공 처리 (예: 로그인 화면으로 이동 또는 홈으로 이동)
                   // 여기서는 가이드에 따라 성공 시 처리를 비워둡니다.
+
+                  context.go(RouterPath.login);
                 } else if (state.errorMessage != null && context.mounted) {
                   ScaffoldMessenger.of(
                     context,

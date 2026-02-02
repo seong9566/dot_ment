@@ -1,5 +1,3 @@
-import 'package:dot_ment/core/utils/error_handler.dart';
-import 'package:dot_ment/features/auth/presentation/providers/auth_providers_di.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'join_viewmodel.g.dart';

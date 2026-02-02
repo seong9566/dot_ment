@@ -162,7 +162,7 @@ class PasswordSettingView extends ConsumerWidget {
                   // 로그인 모드: 로그인 API 호출 후 홈으로 이동
                   final success = await viewModel.login(email ?? '');
                   if (success && context.mounted) {
-                    context.go(RouterPath.home);
+                    context.go(RouterPath.channelList);
                   } else if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('로그인에 실패했습니다.')),

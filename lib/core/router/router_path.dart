@@ -10,4 +10,5 @@ class RouterPath {
   static const passwordSetting = '/password-setting';
   static const passwordCheck = '/password-check';
   static const home = '/home';
+  static const channelList = '/channel-list';
 }

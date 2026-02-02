@@ -1,4 +1,5 @@
 import 'package:dot_ment/features/home/presentation/views/home_view.dart';
+import 'package:dot_ment/features/home/presentation/views/channel_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,7 +17,7 @@ part 'app_router.g.dart';
 @riverpod
 GoRouter goRouter(Ref ref) {
   return GoRouter(
-    initialLocation: RouterPath.home,
+    initialLocation: RouterPath.auth,
     routes: [
       GoRoute(
         path: RouterPath.splash,
@@ -33,6 +34,11 @@ GoRouter goRouter(Ref ref) {
         path: RouterPath.home,
         name: 'home',
         builder: (context, state) => const HomeView(),
+      ),
+      GoRoute(
+        path: RouterPath.channelList,
+        name: 'channel_list',
+        builder: (context, state) => const ChannelListView(),
       ),
       GoRoute(
         path: RouterPath.login,

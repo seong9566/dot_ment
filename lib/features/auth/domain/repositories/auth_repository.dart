@@ -6,7 +6,7 @@ abstract class AuthRepository {
   /// 인증 코드 확인
   Future<bool> verifyCode(String email, String code);
 
-  /// 회원가입 완료 (사용자 추가)
+  /// 회원가입
   Future<bool> addUser(String email, String password);
 
   /// 로그인

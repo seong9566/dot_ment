@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dot_ment/core/constants/app_constants.dart';
 import 'package:dot_ment/core/network/api_interceptor.dart';
+import 'package:dot_ment/features/auth/data/repositories/token_repository_impl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dio_provider.g.dart';
@@ -17,8 +18,10 @@ Dio dio(Ref ref) {
     ),
   );
 
+  final tokenRepository = ref.watch(tokenRepositoryProvider);
+
   // 커스텀 인터셉터 추가
-  dio.interceptors.add(ApiInterceptor());
+  dio.interceptors.add(ApiInterceptor(tokenRepository, dio));
 
   return dio;
 }

@@ -1,5 +1,6 @@
 import 'package:dot_ment/core/network/dio_provider.dart';
 import 'package:dot_ment/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:dot_ment/features/auth/data/repositories/token_repository_impl.dart';
 import 'package:dot_ment/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dot_ment/features/auth/domain/usecases/add_user_usecase.dart';
 import 'package:dot_ment/features/auth/domain/usecases/send_verification_code_usecase.dart';
@@ -13,7 +14,8 @@ part 'auth_providers_di.g.dart';
 @riverpod
 AuthRepository authRepository(Ref ref) {
   final dio = ref.watch(dioProvider);
-  return AuthRepositoryImpl(dio);
+  final tokenRepository = ref.watch(tokenRepositoryProvider);
+  return AuthRepositoryImpl(dio, tokenRepository);
 }
 
 /// Send Verification Code UseCase Provider

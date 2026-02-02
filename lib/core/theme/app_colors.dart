@@ -64,6 +64,12 @@ class AppColors {
   /// 서페이스 색상
   static const surface = Color(0xFFFFFFFF);
 
+  /// 카드/플레이스홀더 어두운 배경색 (4A4A4A)
+  static const cardDark = Color(0xFF4A4A4A);
+
+  /// 브랜드 보라색 (8B5CF6) - 프로필 등 강조용
+  static const brandPurple = Color(0xFF8B5CF6);
+
   /// 구분선 색상
   static const divider = Color(0xFFE0E0E0);
 
